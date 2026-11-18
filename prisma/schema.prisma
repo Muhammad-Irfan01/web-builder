@@ -34,7 +34,7 @@ enum DomainType {
 
 model Domain {
   id          String     @id @default(uuid())
-  hostname    String     @unique // e.g. "saloon.wattlesol.com" or "mysalon.com"
+  hostname    String     @unique // e.g. "saloon.sites.example.com" or "mysalon.com"
   isPrimary   Boolean    @default(false)
   isVerified  Boolean    @default(false)
   type        DomainType @default(CUSTOM)

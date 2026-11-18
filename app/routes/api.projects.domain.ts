@@ -3,6 +3,10 @@ import { requireAuth } from '../lib/auth.server';
 import { handlePreflight, jsonWithCors } from '../lib/cors.server';
 import * as dns from 'dns';
 import { promisify } from 'util';
+import { cnameTarget } from '../lib/origins';
+
+// Public IP that custom domains must point to (A record).
+const SERVER_IP = process.env.BUILDER_PUBLIC_IP || '142.44.136.233';
 
 const resolveCname = promisify(dns.resolveCname);
 const resolve4 = promisify(dns.resolve4);
@@ -194,15 +198,10 @@ export async function loader({ request, params }: { request: Request; params: an
           if (isApex) {
             const ips = await resolve4(domain.hostname);
             // Pointed directly to our server IP
-            isNowVerified = ips.includes('142.44.136.233');
+            isNowVerified = ips.includes(SERVER_IP);
           } else {
             const cnames = await resolveCname(domain.hostname);
-            isNowVerified = cnames.some(addr => 
-              addr.toLowerCase() === 'sandbox.wattlesol.com' || 
-              addr.toLowerCase() === 'sandbox.wattlesol.com.' ||
-              addr.toLowerCase() === 'published.wattlesol.com' || 
-              addr.toLowerCase() === 'published.wattlesol.com.'
-            );
+            isNowVerified = cnames.some(addr => addr.toLowerCase().replace(/\.$/, '') === cnameTarget());
           }
         } catch (err) {
           console.warn(`[Domain Verify] DNS lookup failed for ${domain.hostname}`);
@@ -345,7 +344,7 @@ function getDnsSettings(domain: string) {
     return {
       type: 'A',
       host: '@',
-      value: '142.44.136.233'
+      value: SERVER_IP
     };
   } else {
     const secondToLast = domainParts[domainParts.length - 2];
@@ -358,7 +357,7 @@ function getDnsSettings(domain: string) {
     return {
       type: 'CNAME',
       host: host || '@',
-      value: 'sandbox.wattlesol.com'
+      value: cnameTarget()
     };
   }
 }

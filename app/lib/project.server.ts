@@ -12,6 +12,7 @@
 import { prisma } from './database.server';
 import { decodeJwt } from './auth.server';
 import { normalizeThemeLayout } from './component-tree';
+import { builderHost } from './origins';
 
 export interface ResolvedProject {
   id: string;
@@ -42,7 +43,7 @@ export async function resolveProject(
   // 2. Try cookie if no param (only inside sandbox visualizer or local dev previews)
   if (!projectId) {
     const host = (request.headers.get('host') || '').split(':')[0].toLowerCase();
-    const isSandboxHost = host.includes('sandbox.wattlesol.com') || 
+    const isSandboxHost = host === builderHost() || 
                           host.includes('localhost') || 
                           host.includes('127.0.0.1');
                           
@@ -102,7 +103,7 @@ export async function resolveProject(
       project = domainEntry.project;
     } else {
       // b. Subdomain fallback: Try treating the first part of host as a project slug
-      // e.g. "saloon.localhost" or "saloon.wattlesol.com" -> slug: "saloon"
+      // e.g. "saloon.localhost" or "saloon.sites.example.com" -> slug: "saloon"
       const parts = host.split('.');
       if (parts.length > 1) {
         const slugPart = parts[0];

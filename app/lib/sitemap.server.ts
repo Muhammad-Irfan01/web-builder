@@ -4,6 +4,7 @@
  * Called on every Publish / Save to keep the sitemap fresh.
  */
 import type { Product } from './api';
+import { DASHBOARD_URL } from './origins';
 
 export interface SitemapOptions {
   projectId: string;
@@ -23,7 +24,7 @@ function getBaseUrl(opts: SitemapOptions): string {
   const appBase =
     process.env.VITE_APP_URL ||
     (process.env.NODE_ENV === 'production'
-      ? 'https://orcayoui.wattlesol.com'
+      ? DASHBOARD_URL
       : 'http://localhost:3030');
   return `${appBase}/pub/${opts.projectId}`;
 }

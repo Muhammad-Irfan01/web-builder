@@ -9,7 +9,7 @@ The **Orcayo Custom Builder** (`/orcayo-custom-builder`) is an isolated, high-pe
 1. **Customizer Dashboard**: A premium, section-based drag-and-drop landing page editor featuring live typography, spacing, border, and color token controls.
 2. **Storefront SSR Engine**: A high-speed Server-Side Rendering (SSR) engine built with React Router v7 and Vite, enabling fast product rendering and interactive checkout features.
 3. **Multi-Tenant REST APIs**: A fully secure, isolated backend suite supporting project CRUD actions, templating, and cloning, completely isolated under the PostgreSQL `builder` schema.
-4. **Embedded Framing Integration**: Securely mounted inside the main Next.js developer portal (`orcayo-frontend` on `orcayoui.wattlesol.com`) via a secure, cross-origin communication bridge.
+4. **Embedded Framing Integration**: Securely mounted inside the main Next.js developer portal (`orcayo-frontend` on `app.example.com`) via a secure, cross-origin communication bridge.
 
 ---
 
@@ -19,7 +19,7 @@ The project resides inside a dedicated folder to prevent dependency conflicts wi
 
 ```
 /Users/xain/Documents/Orcayo/web app Orcayo/
-├── orcayo-frontend/          # Next.js customer panel (framing parent: orcayoui.wattlesol.com)
+├── orcayo-frontend/          # Next.js customer panel (framing parent: app.example.com)
 ├── orcayo-backend/           # Core API microservices (authentication gateway on port 3000)
 └── orcayo-custom-builder/    # React Router v7 sandbox (customizer preview + SSR on port 3030)
 ```
@@ -139,7 +139,7 @@ The storefront pages run inside `/storefront` paths. They serve both as the live
 
 All REST endpoints verify incoming headers to prevent cross-origin abuse and maintain absolute tenant isolation:
 
-1. **Origin Restrictor**: Asserts that requests only originate from trusted subdomains (e.g. `orcayoui.wattlesol.com`, `localhost`).
+1. **Origin Restrictor**: Asserts that requests only originate from trusted subdomains (e.g. `app.example.com`, `localhost`).
 2. **Identity Validator**: Intercepts server requests, parses and validates JWT authorization headers, extracts tenant information (`storeId`), and limits operations strictly to that store context.
 
 ### Endpoint Specifications
@@ -164,7 +164,7 @@ The Next.js customer panel embeds the customizer within an `iframe`. The followi
 module.exports = {
   async headers() {
     const corsHeaders = [
-      { key: 'Access-Control-Allow-Origin', value: 'https://sandbox.wattlesol.com' },
+      { key: 'Access-Control-Allow-Origin', value: 'https://builder.example.com' },
       { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
       { key: 'Access-Control-Allow-Credentials', value: 'true' }
     ];
@@ -176,7 +176,7 @@ module.exports = {
           ...corsHeaders,
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://sandbox.wattlesol.com https://*.wattlesol.com; frame-ancestors 'self' https://sandbox.wattlesol.com; object-src 'none';"
+            value: "frame-src 'self' https://builder.example.com https://*.example.com; frame-ancestors 'self' https://builder.example.com; object-src 'none';"
           }
         ]
       }
@@ -190,7 +190,7 @@ The landing page iframe component ([LandingPages.tsx](file:///Users/xain/Documen
 
 * **`.env`** and **`.env.local`**:
   ```bash
-  NEXT_PUBLIC_BUILDER_URL=https://sandbox.wattlesol.com
+  NEXT_PUBLIC_BUILDER_URL=https://builder.example.com
   ```
 
 ---
@@ -206,7 +206,7 @@ The landing page iframe component ([LandingPages.tsx](file:///Users/xain/Documen
 Ensure the following settings are configured as **both** Build Arguments (used during `npm run build`) AND runtime Environment Variables:
 
 ```bash
-VITE_API_BASE_URL=https://orcayo.wattlesol.com/api    # Core Gateway API
+VITE_API_BASE_URL=https://api.example.com/api    # Core Gateway API
 VITE_STORE_ID=your-tenant-store-id-uuid
 VITE_STORE_NAME=My Store Title
 PORT=3030
@@ -233,7 +233,7 @@ docker compose up --build   # Tests container compilation on port 3030
 ---
 
 ## 10. Direct URL Opening Gated Security
-To enforce security, direct loading of the builder via browser URL hits (`https://sandbox.wattlesol.com/`) is restricted by a security wall in `BuilderPage.tsx`.
+To enforce security, direct loading of the builder via browser URL hits (`https://builder.example.com/`) is restricted by a security wall in `BuilderPage.tsx`.
 
 * **The Security Hook**:
   ```typescript
@@ -249,7 +249,7 @@ To enforce security, direct loading of the builder via browser URL hits (`https:
 
     const isInIframe = window.self !== window.top;
     const referrer = document.referrer || '';
-    const isAuthorizedOrigin = referrer.includes('orcayoui.wattlesol.com');
+    const isAuthorizedOrigin = referrer.includes('app.example.com');
 
     if (!isInIframe || !isAuthorizedOrigin) {
       setIsAuthorized(false); // Display security wall
@@ -289,7 +289,7 @@ Because React Router v7 API endpoints act as raw HTTP resource routes, they comp
 We created a centralized module to orchestrate preflight and headers mapping:
 ```typescript
 const ALLOWED_ORIGINS = [
-  "https://orcayoui.wattlesol.com",
+  "https://app.example.com",
   "http://localhost:3000",
   "http://localhost:5173",
 ];
@@ -300,7 +300,7 @@ export function getCorsHeaders(request: Request): Headers {
 
   const isAllowed = origin && (
     ALLOWED_ORIGINS.includes(origin) || 
-    origin.endsWith(".wattlesol.com")
+    origin.endsWith(".example.com")
   );
 
   if (isAllowed) {
@@ -367,4 +367,4 @@ export async function action({ request }: { request: Request }) {
 
 ### Referrer Go Back Dynamic Backlinks
 * Ensures users hitting error pages or security blocks have active escape routes.
-* Inspects the browser's `document.referrer`. If it maps back to a valid `wattlesol.com` portal page, it routes the browser back to the calling page. If the referrer is empty, it securely routes them back to the active list view: `https://orcayoui.wattlesol.com/dashboard/landing-pages/all`.
+* Inspects the browser's `document.referrer`. If it maps back to a valid configured dashboard portal page, it routes the browser back to the calling page. If the referrer is empty, it securely routes them back to the active list view: `https://app.example.com/dashboard/landing-pages/all`.

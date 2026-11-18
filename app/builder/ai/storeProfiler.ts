@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../lib/origins';
 /**
  * Store Profiler & Intent Detection Engine
  * Proactively classifies what the store sells:
@@ -40,7 +41,7 @@ export interface StoreProfile {
 
 export async function profileStore(
   storeId: string,
-  apiBaseUrl: string = 'https://orcayo.wattlesol.com',
+  apiBaseUrl: string = API_ORIGIN,
   token?: string | null
 ): Promise<StoreProfile> {
   const headers: Record<string, string> = {

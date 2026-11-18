@@ -1,3 +1,4 @@
+import { API_ORIGIN, isTrustedOrigin } from './origins';
 import { redirect } from 'react-router';
 
 export interface AuthenticatedUser {
@@ -27,7 +28,7 @@ export function decodeJwt(token: string): any {
  * This token is signed by the backend, contains the storeId, and lasts 10 years.
  */
 export async function generatePersistentSiteToken(userId: string): Promise<string | null> {
-  const apiBaseUrl = process.env.VITE_API_BASE_URL || 'https://orcayo.wattlesol.com/api';
+  const apiBaseUrl = `${API_ORIGIN}/api`;
   let cleanApiUrl = apiBaseUrl.replace(/\/+$/, '');
   if (!cleanApiUrl.endsWith('/api')) {
     cleanApiUrl = `${cleanApiUrl}/api`;
@@ -73,22 +74,8 @@ export async function requireAuth(request: Request): Promise<AuthenticatedUser> 
   const referer = request.headers.get('referer') || '';
   const origin = request.headers.get('origin') || '';
 
-  // In production, restrict to orcayoui.wattlesol.com
-  const isAllowedOrigin = (urlStr: string) => {
-    if (!urlStr) return false;
-    try {
-      const parsed = new URL(urlStr);
-      const host = parsed.hostname; // Use hostname to avoid port issues
-      return (
-        host === 'orcayoui.wattlesol.com' ||
-        host === 'localhost' ||
-        host === '127.0.0.1' ||
-        urlStr.includes('wattlesol.com')
-      );
-    } catch {
-      return false;
-    }
-  };
+  // In production, restrict to the configured dashboard (VITE_DASHBOARD_URL / ALLOWED_ORIGINS)
+  const isAllowedOrigin = (urlStr: string) => isTrustedOrigin(urlStr);
 
   // Skip referrer check in local development if no referrer is sent
   const env = process.env.NODE_ENV;
@@ -116,7 +103,7 @@ export async function requireAuth(request: Request): Promise<AuthenticatedUser> 
   }
 
   // ── Validate with main Orcayo Backend ────────────────────────────────────
-  const apiBaseUrl = process.env.VITE_API_BASE_URL || 'https://orcayo.wattlesol.com/api';
+  const apiBaseUrl = `${API_ORIGIN}/api`;
   // Strip trailing slash if present
   let cleanApiUrl = apiBaseUrl.replace(/\/+$/, '');
   if (!cleanApiUrl.endsWith('/api')) {

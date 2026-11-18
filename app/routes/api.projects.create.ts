@@ -3,6 +3,7 @@ import { requireAuth, generatePersistentSiteToken } from '../lib/auth.server';
 import { prisma } from '../lib/database.server';
 import { DEFAULT_THEME } from '../lib/theme';
 import { handlePreflight, jsonWithCors } from '../lib/cors.server';
+import { systemHostname } from '../lib/origins';
 
 export async function action({ request }: { request: Request }) {
   const preflight = handlePreflight(request);
@@ -53,7 +54,7 @@ export async function action({ request }: { request: Request }) {
         domains: {
           create: [
             {
-              hostname: `${slug}.wattlesol.com`,
+              hostname: systemHostname(slug),
               isPrimary: true,
               isVerified: true,
               type: 'SYSTEM',

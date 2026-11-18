@@ -4,13 +4,15 @@
  * Customer JWTs are scoped to read-only profile/order access only.
  */
 
+import { API_ORIGIN } from './origins';
+
 const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return 'http://localhost:3000';
     }
-    return 'https://orcayo.wattlesol.com';
+    return API_ORIGIN;
   }
   const envVal = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL)
     ? (import.meta as any).env.VITE_API_BASE_URL

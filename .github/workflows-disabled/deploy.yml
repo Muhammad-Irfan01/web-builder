@@ -32,8 +32,8 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/orcayo-grapes-builder:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/orcayo-grapes-builder:${{ github.sha }}
           build-args: |
-            VITE_API_BASE_URL=https://orcayo.wattlesol.com
-            VITE_STORE_ID=cmo7aimu90000p601kv9hi4db
+            VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+            VITE_DASHBOARD_URL=${{ secrets.VITE_DASHBOARD_URL }}
             VITE_STORE_NAME=My Orcayo Store
           cache-from: type=gha
           cache-to: type=gha,mode=max

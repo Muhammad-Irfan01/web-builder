@@ -4,6 +4,7 @@ import SectionsPanel  from './SectionsPanel';
 import BuilderCanvas  from './BuilderCanvas';
 import SettingsPanel  from './SettingsPanel';
 import { setBuilderApiKey } from '../lib/api';
+import { DASHBOARD_URL, isTrustedOrigin } from '../lib/origins';
 import '../builder/builder.css';
 
 interface BuilderProps {
@@ -599,7 +600,7 @@ export default function BuilderPage({ initialData }: BuilderProps) {
 
     const referrer = document.referrer || '';
     // Restrict to our frontend dashboard domain or allow if loaded with valid backend verified project/token query
-    const isAuthorizedOrigin = referrer.includes('orcayoui.wattlesol.com') || referrer.includes('wattlesol.com');
+    const isAuthorizedOrigin = isTrustedOrigin(referrer);
     const urlParams = new URLSearchParams(window.location.search);
     const hasToken = urlParams.has('token');
     const hasProject = !!initialData?.project;
@@ -619,10 +620,10 @@ export default function BuilderPage({ initialData }: BuilderProps) {
   const handleGoBack = (e: React.MouseEvent) => {
     e.preventDefault();
     const referrer = document.referrer || '';
-    if (referrer && (referrer.includes('orcayoui.wattlesol.com') || referrer.includes('wattlesol.com'))) {
+    if (referrer && isTrustedOrigin(referrer)) {
       window.location.href = referrer;
     } else {
-      window.location.href = 'https://orcayoui.wattlesol.com/dashboard/landing-pages/all';
+      window.location.href = `${DASHBOARD_URL}/dashboard/landing-pages/all`;
     }
   };
 

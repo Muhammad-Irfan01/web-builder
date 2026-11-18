@@ -1,5 +1,6 @@
+import { configuredOrigins, DASHBOARD_URL } from './origins';
+
 const ALLOWED_ORIGINS = [
-  "https://orcayoui.wattlesol.com",
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:5173",
@@ -10,8 +11,7 @@ export function getCorsHeaders(request: Request): Headers {
   const headers = new Headers();
 
   const isAllowed = origin && (
-    ALLOWED_ORIGINS.includes(origin) || 
-    origin.endsWith(".wattlesol.com")
+    ALLOWED_ORIGINS.includes(origin) || configuredOrigins().includes(origin)
   );
 
   if (isAllowed) {
@@ -25,7 +25,7 @@ export function getCorsHeaders(request: Request): Headers {
     headers.set("Access-Control-Allow-Origin", "*");
   } else {
     // Secure fallback origin
-    headers.set("Access-Control-Allow-Origin", "https://orcayoui.wattlesol.com");
+    headers.set("Access-Control-Allow-Origin", DASHBOARD_URL);
   }
 
   return headers;

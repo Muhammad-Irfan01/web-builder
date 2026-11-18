@@ -50,7 +50,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
 
     const matchingRecord = validationRecords.find((record: any) => {
-      // http_url is e.g. "http://storefront.wattlesol.com/.well-known/acme-challenge/bKfOzSJs_hFPW4MsWGPo5Q"
+      // http_url is e.g. "http://shop.example.com/.well-known/acme-challenge/bKfOzSJs_hFPW4MsWGPo5Q"
       return record.http_url?.endsWith(`/acme-challenge/${token}`) || record.http_url?.includes(token);
     });
 

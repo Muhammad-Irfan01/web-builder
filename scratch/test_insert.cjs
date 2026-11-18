@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function testInsert() {
   console.log("=== Testing Database Insertion of Custom Domain ===");
-  const testHost = "storefront.wattlesol.com";
+  const testHost = "shop.example.com";
   const projectId = "443ba554-b6d4-49a3-bdab-3b7b923a94ae";
   const storeId = "cmo7aimu90000p601kv9hi4db";
 

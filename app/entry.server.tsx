@@ -4,12 +4,12 @@ import { initPopupCron } from "./lib/popup-cron.server";
 initPopupCron();
 
 import type { EntryContext } from "react-router";
+import { configuredOrigins } from "./lib/origins";
 import { ServerRouter } from "react-router";
 import { renderToReadableStream } from "react-dom/server";
 import { isbot } from "isbot";
 
 const ALLOWED_ORIGINS = [
-  "https://orcayoui.wattlesol.com",
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:3030",
@@ -26,7 +26,7 @@ function getCorsHeaders(request: Request) {
   // Allow null origin or missing origin (standard for many local/server requests)
   const isAllowed = !origin || origin === "null" || 
     ALLOWED_ORIGINS.includes(origin) || 
-    origin.endsWith(".wattlesol.com");
+    configuredOrigins().includes(origin);
 
   console.log(`[CORS] Request Origin: ${origin}, Allowed: ${!!isAllowed}`);
 

@@ -5,6 +5,7 @@ import { StorefrontLayout } from '../storefront/StorefrontLayout';
 import { orders as ordersApi, payments as paymentsApi } from '../lib/api';
 import '../storefront/storefront.css';
 import { resolveProject } from '../lib/project.server';
+import { API_ORIGIN } from '../lib/origins';
 
 export async function loader({ params, request }: { params: { projectId: string; orderId: string }; request: Request }) {
   const resolved = await resolveProject(request, params.projectId);
@@ -161,7 +162,7 @@ function OrderConfirmationContent() {
         if (customerPhone && targetStoreId) {
           const apiBaseUrl = typeof window !== 'undefined' && window.location.origin.includes('localhost')
             ? 'http://localhost:3000'
-            : 'https://orcayo.wattlesol.com';
+            : API_ORIGIN;
           await fetch(`${apiBaseUrl}/api/whatsapp/checkout/order-status-flow`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
