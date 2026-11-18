@@ -1,0 +1,405 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   ORCAYO CUSTOM BUILDER — DESIGN SYSTEM
+   Vanilla CSS · Dark Glassmorphic · Premium SaaS
+───────────────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+/* ── 1. CSS Custom Properties (Tokens) ─────────────────────────────────── */
+:root {
+  /* Brand palette */
+  --color-brand:           #3B82F6;
+  --color-brand-light:     #60A5FA;
+  --color-brand-dark:      #2563EB;
+  --color-accent:          #10B981;
+  --color-accent-light:    #34D399;
+
+  /* Surface hierarchy */
+  --color-bg:              #F8FAFC;
+  --color-surface-0:       #FFFFFF;
+  --color-surface-1:       #F1F5F9;
+  --color-surface-2:       #E2E8F0;
+  --color-surface-3:       #CBD5E1;
+  --color-border:          #E2E8F0;
+  --color-border-strong:   #CBD5E1;
+  --color-active-bg:       #EEF3FF;
+
+  /* Text */
+  --color-text-primary:    #0F172A;
+  --color-text-secondary:  #475569;
+  --color-text-muted:      #64748B;
+
+  /* Semantic */
+  --color-success:         #10B981;
+  --color-warning:         #F59E0B;
+  --color-danger:          #EF4444;
+  --color-info:            #3B82F6;
+
+  /* Glass */
+  --glass-bg:              rgba(255, 255, 255, 0.75);
+  --glass-border:          rgba(59, 130, 246, 0.15);
+  --glass-blur:            12px;
+
+  /* Radius */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+
+  /* Shadow */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
+  --shadow-glow: 0 4px 20px rgba(59, 130, 246, 0.08);
+
+  /* Spacing (8pt grid) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+  --sp-12: 48px; --sp-16: 64px;
+
+  /* Typography */
+  --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Outfit', 'Inter', sans-serif;
+
+  /* Panel widths */
+  --panel-left:    260px;
+  --panel-right:   300px;
+  --header-height: 56px;
+
+  /* Transition */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+}
+
+/* ── 2. Reset & Base ────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-surface-3); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-brand); }
+
+/* ── 3. Typography ──────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+p { line-height: 1.65; color: var(--color-text-secondary); }
+a { color: var(--color-brand-light); text-decoration: none; transition: color var(--transition-fast); }
+a:hover { color: var(--color-text-primary); }
+code, pre { font-family: 'SF Mono', 'Fira Code', monospace; }
+
+/* ── 4. Glass Card ──────────────────────────────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.glass-strong {
+  background: rgba(22, 26, 45, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+}
+
+/* ── 5. Buttons ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  outline: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-brand), var(--color-brand-dark));
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.6);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+.btn-secondary:hover {
+  background: var(--color-surface-3);
+  border-color: var(--color-brand);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid transparent;
+}
+.btn-ghost:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.btn-icon {
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-icon:hover { background: var(--color-surface-2); color: var(--color-text-primary); }
+.btn-icon.active { background: rgba(99, 102, 241, 0.2); color: var(--color-brand-light); }
+
+.btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+.btn-xs { padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-sm); }
+
+/* ── 6. Form Controls ───────────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.input:focus {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+.input::placeholder { color: var(--color-text-muted); }
+
+select.input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239ba3c0' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+.label {
+  display: block;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+/* ── 7. Badges & Tags ───────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-brand { background: rgba(99, 102, 241, 0.2); color: var(--color-brand-light); }
+.badge-success { background: rgba(52, 211, 153, 0.15); color: var(--color-success); }
+.badge-warning { background: rgba(251, 191, 36, 0.15); color: var(--color-warning); }
+.badge-danger { background: rgba(248, 113, 113, 0.15); color: var(--color-danger); }
+
+/* ── 8. Color Swatch ────────────────────────────────────────────────────── */
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+.color-swatch::-webkit-color-swatch-wrapper { padding: 0; }
+.color-swatch::-webkit-color-swatch { border: none; border-radius: 4px; }
+.color-swatch:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); }
+
+/* ── 9. Dividers ────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--sp-4) 0;
+}
+
+/* ── 10. Scrollable panels ──────────────────────────────────────────────── */
+.scroll-y { overflow-y: auto; overflow-x: hidden; }
+
+/* ── 11. Loading Spinner ────────────────────────────────────────────────── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-brand);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── 12. Animations ─────────────────────────────────────────────────────── */
+@keyframes fadeIn    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp   { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideLeft { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes pulse     { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in   { animation: fadeIn 0.3s ease both; }
+.animate-slide-up  { animation: slideUp 0.35s ease both; }
+.animate-slide-left { animation: slideLeft 0.3s ease both; }
+.animate-pulse     { animation: pulse 2s ease infinite; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface-1) 25%, var(--color-surface-2) 50%, var(--color-surface-1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ── 13. Drag & Drop ────────────────────────────────────────────────────── */
+.dragging {
+  opacity: 0.5;
+  outline: 2px dashed var(--color-brand);
+  outline-offset: 3px;
+  border-radius: var(--radius-md);
+}
+.drag-over {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border-color: var(--color-brand) !important;
+}
+
+/* ── 14. Layout Utilities ───────────────────────────────────────────────── */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-center { align-items: center; justify-content: center; }
+.flex-between { align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }
+.gap-1 { gap: var(--sp-1); } .gap-2 { gap: var(--sp-2); }
+.gap-3 { gap: var(--sp-3); } .gap-4 { gap: var(--sp-4); }
+.w-full { width: 100%; } .h-full { height: 100%; }
+.p-4 { padding: var(--sp-4); } .p-6 { padding: var(--sp-6); }
+.pt-4 { padding-top: var(--sp-4); }
+.text-sm { font-size: 0.875rem; } .text-xs { font-size: 0.75rem; }
+.text-lg { font-size: 1.125rem; } .text-xl { font-size: 1.25rem; }
+.font-bold { font-weight: 700; } .font-semibold { font-weight: 600; }
+.text-muted { color: var(--color-text-muted); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-brand { color: var(--color-brand-light); }
+.rounded { border-radius: var(--radius-md); }
+.rounded-full { border-radius: var(--radius-full); }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hidden { display: none !important; }
+
+/* ── 15. Toast Notification ─────────────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: var(--sp-6);
+  right: var(--sp-6);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s ease both;
+  pointer-events: all;
+  max-width: 360px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-primary);
+}
+.toast-success { border-color: rgba(52, 211, 153, 0.4); }
+.toast-error   { border-color: rgba(248, 113, 113, 0.4); }
+
+/* ── 16. Tooltip ────────────────────────────────────────────────────────── */
+[data-tooltip] { position: relative; }
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-surface-3);
+  color: var(--color-text-primary);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  border: 1px solid var(--color-border);
+  z-index: 999;
+}
+[data-tooltip]:hover::after { opacity: 1; }

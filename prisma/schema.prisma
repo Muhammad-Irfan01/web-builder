@@ -1,0 +1,84 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique // e.g. "saloon-store" for system subdomain
+  description String?
+  isPublished Boolean  @default(false)
+  storeId     String
+  userId      String?
+  themeData   String   @db.Text
+  apiKey      String?  @unique // Generated key for backend-to-backend calls
+  sitemap     String?  @db.Text // Compiled XML sitemap, regenerated on publish
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  domains     Domain[]
+
+  @@map("projects")
+}
+
+enum DomainType {
+  SYSTEM
+  CUSTOM
+}
+
+model Domain {
+  id          String     @id @default(uuid())
+  hostname    String     @unique // e.g. "saloon.wattlesol.com" or "mysalon.com"
+  isPrimary   Boolean    @default(false)
+  isVerified  Boolean    @default(false)
+  type        DomainType @default(CUSTOM)
+  
+  projectId   String
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  storeId     String     // Redundant but useful for store-level lookups
+  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("domains")
+}
+
+model Template {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  themeData   String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("templates")
+}
+
+model PopupStoreSchedule {
+  id              String   @id @default(uuid())
+  storeId         String
+  projectId       String
+  templateId      String?
+  name            String
+  occasion        String
+  status          String   @default("SCHEDULED")
+  startDate       DateTime
+  endDate         DateTime
+  discountType    String?
+  discountValue   Float?
+  customThemeData String?  @db.Text
+  backupThemeData String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([storeId])
+  @@index([status])
+  @@map("popup_store_schedules")
+}

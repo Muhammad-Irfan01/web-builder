@@ -1,0 +1,48 @@
+{
+  "name": "orcayo-custom-builder",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.2.18",
+    "@langchain/openai": "^1.6.2",
+    "@prisma/client": "^5.12.1",
+    "@react-router/node": "7.15.1",
+    "@react-router/serve": "7.15.1",
+    "grapesjs": "0.23.6",
+    "grapesjs-blocks-basic": "^1.0.2",
+    "grapesjs-custom-code": "^1.0.2",
+    "grapesjs-navbar": "^1.0.2",
+    "grapesjs-parser-postcss": "^1.0.3",
+    "grapesjs-plugin-export": "^1.0.12",
+    "grapesjs-plugin-forms": "^2.0.6",
+    "grapesjs-style-bg": "^2.0.2",
+    "grapesjs-tabs": "^1.0.6",
+    "grapesjs-touch": "^0.1.1",
+    "isbot": "^5.1.36",
+    "lucide-react": "^1.27.0",
+    "prisma": "^5.12.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router": "7.15.1"
+  },
+  "devDependencies": {
+    "@react-router/dev": "7.15.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^22",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "vitest": "^4.1.7"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-darwin-arm64": "^1.2.8"
+  }
+}

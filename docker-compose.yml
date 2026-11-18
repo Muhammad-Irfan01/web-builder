@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Orcayo Custom Builder — Docker Compose
+# For LOCAL testing of the production Docker image.
+#
+# Usage:
+#   1. Copy .env.example to .env and fill in values
+#   2. docker compose up --build
+#   3. Open http://localhost:3030
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  orcayo-custom-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # These get baked into the Vite client bundle at build time
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000}
+        VITE_STORE_ID: ${VITE_STORE_ID:-default-store}
+        VITE_STORE_NAME: ${VITE_STORE_NAME:-My Orcayo Store}
+    image: orcayo-custom-builder:latest
+    container_name: orcayo-custom-builder
+    restart: unless-stopped
+    ports:
+      - "3030:3030"
+    environment:
+      NODE_ENV: production
+      PORT: 3030
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000}
+      VITE_STORE_ID: ${VITE_STORE_ID:-default-store}
+      VITE_STORE_NAME: ${VITE_STORE_NAME:-My Orcayo Store}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3030/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - orcayo-net
+
+networks:
+  orcayo-net:
+    driver: bridge
+    # If you want to connect to your existing orcayo-backend network:
+    # external: true
+    # name: orcayo-backend_default
