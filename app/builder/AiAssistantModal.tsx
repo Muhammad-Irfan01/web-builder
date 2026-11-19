@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Bot, X, Send, Sparkles, Check, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 import type { StoreProfile } from './ai/storeProfiler';
 import type { GeneratedBlockPreview } from './ai/blockCatalog';
+import { authFetch } from './authFetch';
 
 interface Message {
   id: string;
@@ -72,7 +73,7 @@ export default function AiAssistantModal({ profile, onApplyBlock, token }: AiAss
     setLoading(true);
 
     try {
-      const res = await fetch('/api/builder/chat', {
+      const res = await authFetch('/api/builder/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

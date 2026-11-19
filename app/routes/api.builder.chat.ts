@@ -1,3 +1,4 @@
+import { requireAuth } from '../lib/auth.server';
 import type { ActionFunctionArgs } from '@react-router/node';
 import { handleBuilderChatTurn } from '../builder/ai/agentService.server';
 import type { StoreProfile } from '../builder/ai/storeProfiler';
@@ -7,18 +8,20 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({ error: 'Method not allowed' }, { status: 405 });
   }
 
+  // The store always comes from the login, never from the request body
+  const { storeId } = await requireAuth(request);
+
   try {
     const body = await request.json();
-    const { prompt, storeId, profile, conversationId, canvasContext } = body as {
+    const { prompt, profile, conversationId, canvasContext } = body as {
       prompt: string;
-      storeId: string;
       profile?: StoreProfile;
       conversationId?: string;
       canvasContext?: { sections: string[]; summary: string };
     };
 
-    if (!prompt || !storeId) {
-      return Response.json({ error: 'Missing prompt or storeId' }, { status: 400 });
+    if (!prompt) {
+      return Response.json({ error: 'Missing prompt' }, { status: 400 });
     }
 
     const result = await handleBuilderChatTurn({

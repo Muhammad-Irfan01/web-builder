@@ -20,6 +20,7 @@ import type { ComponentAnnotation } from './AnnotationPopover';
 import type { StoreProfile } from './ai/storeProfiler';
 import type { GeneratedBlockPreview } from './ai/blockCatalog';
 import type { ChatMessageItem, ConversationSummary } from './ai/agentService.server';
+import { authFetch } from './authFetch';
 
 interface AiAgentPanelProps {
   profile: StoreProfile | null;
@@ -55,12 +56,12 @@ export default function AiAgentPanel({
   const [showHistory, setShowHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const storeId = profile?.storeId || 'cmu1beoa30012sboyhdi6n98t';
+  const storeId = profile?.storeId || ''; // only used for local cache keys; the server uses the login
 
   // 1. Fetch historical conversations on mount or storeId change
   const fetchConversations = async () => {
     try {
-      const res = await fetch(`/api/builder/conversations?storeId=${encodeURIComponent(storeId)}`);
+      const res = await authFetch(`/api/builder/conversations?storeId=${encodeURIComponent(storeId)}`);
       if (res.ok) {
         const data = await res.json();
         if (data.conversations && Array.isArray(data.conversations)) {
@@ -84,7 +85,7 @@ export default function AiAgentPanel({
   const loadConversation = async (convId: string) => {
     setLoading(true);
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `/api/builder/conversations/${convId}?storeId=${encodeURIComponent(storeId)}`
       );
       if (res.ok) {
@@ -108,7 +109,7 @@ export default function AiAgentPanel({
   const handleStartNewChat = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/builder/conversations', {
+      const res = await authFetch('/api/builder/conversations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -149,7 +150,7 @@ What would you like to build on your storefront today?`,
     e.stopPropagation();
     if (!confirm('Are you sure you want to delete this chat history?')) return;
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `/api/builder/conversations/${convId}?storeId=${encodeURIComponent(storeId)}`,
         { method: 'DELETE' }
       );
@@ -211,7 +212,7 @@ What would you like to build on your storefront today?`,
 
     try {
       const canvasContext = onGetCanvasContext ? onGetCanvasContext() : undefined;
-      const res = await fetch('/api/builder/chat', {
+      const res = await authFetch('/api/builder/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

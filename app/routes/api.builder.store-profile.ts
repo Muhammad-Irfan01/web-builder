@@ -1,9 +1,11 @@
+import { requireAuth } from '../lib/auth.server';
 import type { LoaderFunctionArgs } from '@react-router/node';
 import { getStoreKnowledge } from '../builder/ai/storeKnowledge.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const storeId = url.searchParams.get('storeId') || 'cmu1beoa30012sboyhdi6n98t';
+  // The store always comes from the login, never from the query string
+  const { storeId } = await requireAuth(request);
   const refresh = url.searchParams.get('refresh') === 'true';
 
   try {

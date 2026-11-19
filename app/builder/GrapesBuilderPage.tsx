@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import AnnotationPopover, { type ComponentAnnotation } from './AnnotationPopover';
 import './grapesBuilder.css';
+import { authFetch } from './authFetch';
 
 interface GrapesBuilderProps {
   initialData?: {
@@ -75,9 +76,9 @@ export default function GrapesBuilderPage({ initialData }: GrapesBuilderProps) {
     async function loadStoreProfile() {
       if (typeof window === 'undefined') return;
       const urlParams = new URLSearchParams(window.location.search);
-      const activeStoreId = urlParams.get('storeId') || 'cmu1beoa30012sboyhdi6n98t';
+      const activeStoreId = urlParams.get('storeId') || '';
       try {
-        const res = await fetch(`/api/builder/store-profile?storeId=${encodeURIComponent(activeStoreId)}`);
+        const res = await authFetch(`/api/builder/store-profile?storeId=${encodeURIComponent(activeStoreId)}`);
         if (res.ok) {
           const json = await res.json();
           if (json.profile) {

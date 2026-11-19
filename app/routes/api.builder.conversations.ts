@@ -1,3 +1,4 @@
+import { requireAuth } from '../lib/auth.server';
 import type { LoaderFunctionArgs, ActionFunctionArgs } from '@react-router/node';
 import {
   listBuilderConversations,
@@ -5,12 +6,8 @@ import {
 } from '../builder/ai/agentService.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const storeId = url.searchParams.get('storeId');
-
-  if (!storeId) {
-    return Response.json({ error: 'Missing storeId query parameter' }, { status: 400 });
-  }
+  // The store always comes from the login, never from the query string
+  const { storeId } = await requireAuth(request);
 
   try {
     const conversations = await listBuilderConversations(storeId);
@@ -29,13 +26,11 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({ error: 'Method not allowed' }, { status: 405 });
   }
 
+  const { storeId } = await requireAuth(request);
+
   try {
     const body = await request.json();
-    const { storeId, title } = body as { storeId: string; title?: string };
-
-    if (!storeId) {
-      return Response.json({ error: 'Missing storeId' }, { status: 400 });
-    }
+    const { title } = body as { title?: string };
 
     const newConv = await createBuilderConversation(storeId, title);
     return Response.json({

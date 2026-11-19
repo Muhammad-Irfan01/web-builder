@@ -1,3 +1,4 @@
+import { requireAuth } from '../lib/auth.server';
 import type { LoaderFunctionArgs, ActionFunctionArgs } from '@react-router/node';
 import {
   getConversationWithMessages,
@@ -6,8 +7,7 @@ import {
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const conversationId = params.id;
-  const url = new URL(request.url);
-  const storeId = url.searchParams.get('storeId') || '';
+  const { storeId } = await requireAuth(request);
 
   if (!conversationId) {
     return Response.json({ error: 'Missing conversation id parameter' }, { status: 400 });
@@ -37,8 +37,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   if (request.method === 'DELETE') {
     try {
-      const url = new URL(request.url);
-      const storeId = url.searchParams.get('storeId') || '';
+      const { storeId } = await requireAuth(request);
       const success = await deleteBuilderConversation(conversationId, storeId);
       return Response.json({ success });
     } catch (err: any) {
